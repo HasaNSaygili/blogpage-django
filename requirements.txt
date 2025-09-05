@@ -1,0 +1,31 @@
+# Django Blog Projesi - Requirements
+# Temel Django ve bağımlılıkları
+Django==5.2.5
+asgiref==3.9.1
+sqlparse==0.5.3
+tzdata==2025.2
+
+# Django Form ve UI Kütüphaneleri
+django-crispy-forms==2.4
+crispy-bootstrap5==2025.6
+django-js-asset==3.1.2
+
+# Rich Text Editor
+django-ckeditor==6.7.3
+
+# Dosya Yönetimi
+django-cleanup==9.0.0
+Pillow==11.2.1
+
+# Email Doğrulama (opsiyonel)
+email-validator==2.2.0
+
+# Güvenlik ve Güvenilirlik
+certifi==2025.6.15
+charset-normalizer==3.4.2
+idna==3.10
+urllib3==2.5.0
+
+# Python Standart Kütüphaneleri
+python-dateutil==2.9.0.post0
+pytz==2025.2
