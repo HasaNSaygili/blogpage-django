@@ -1,0 +1,159 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<!-- Hero Section -->
+<div class="hero-section bg-primary text-white py-5 mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-3">Hasan Blog'a Hoşgeldiniz! 👋</h1>
+                <p class="lead mb-4">
+                    Teknoloji, yazılım geliştirme ve programlama dünyasından en güncel içerikler. 
+                    Yapay zeka, web geliştirme, mobil uygulamalar ve daha fazlası...
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="{% url 'article:articles' %}" class="btn btn-light btn-lg">
+                        <i class="fas fa-book me-2"></i>Makaleleri İncele
+                    </a>
+                    <a href="{% url 'about' %}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-user me-2"></i>Hakkımda
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center">
+                <div class="hero-image">
+                    <i class="fas fa-laptop-code" style="font-size: 8rem; opacity: 0.3;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Welcome Message -->
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0 mb-5">
+                <div class="card-body p-5 text-center">
+                    {% if request.user.is_authenticated %}
+                        <h3 class="text-primary mb-3">
+                            <i class="fas fa-heart me-2"></i>Hoşgeldiniz, {{request.user.username}}!
+                        </h3>
+                        <p class="text-muted mb-4">
+                            Blog'a hoşgeldiniz! Yeni makaleler oluşturabilir, mevcut makalelerinizi düzenleyebilir 
+                            ve diğer geliştiricilerle deneyimlerinizi paylaşabilirsiniz.
+                        </p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="{% url 'article:dashboard' %}" class="btn btn-primary">
+                                <i class="fas fa-tachometer-alt me-2"></i>Kontrol Paneli
+                            </a>
+                            <a href="{% url 'article:addarticle' %}" class="btn btn-success">
+                                <i class="fas fa-plus me-2"></i>Yeni Makale
+                            </a>
+                        </div>
+                    {% else %}
+                        <h3 class="text-primary mb-3">
+                            <i class="fas fa-user-plus me-2"></i>Blog'a Katılın!
+                        </h3>
+                        <p class="text-muted mb-4">
+                            Yazılım geliştirme dünyasındaki deneyimlerinizi paylaşmak için 
+                            blog'a üye olun ve makalelerinizi yayınlayın.
+                        </p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="{% url 'user:register' %}" class="btn btn-primary">
+                                <i class="fas fa-user-plus me-2"></i>Kayıt Ol
+                            </a>
+                            <a href="{% url 'user:login' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-sign-in-alt me-2"></i>Giriş Yap
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-code text-primary" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="card-title">Teknoloji</h5>
+                    <p class="card-text text-muted">
+                        En güncel teknoloji trendleri, programlama dilleri ve geliştirme araçları hakkında makaleler.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-brain text-success" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="card-title">Yapay Zeka</h5>
+                    <p class="card-text text-muted">
+                        Makine öğrenmesi, derin öğrenme ve yapay zeka uygulamaları hakkında detaylı içerikler.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <div class="feature-icon mb-3">
+                        <i class="fas fa-mobile-alt text-info" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="card-title">Mobil Geliştirme</h5>
+                    <p class="card-text text-muted">
+                        iOS, Android ve cross-platform mobil uygulama geliştirme rehberleri ve ipuçları.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        border-radius: 0 0 20px 20px;
+    }
+    
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+    }
+    
+    .feature-icon {
+        transition: transform 0.3s ease;
+    }
+    
+    .card:hover .feature-icon {
+        transform: scale(1.1);
+    }
+    
+    .btn {
+        transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+</style>
+{% endblock %}

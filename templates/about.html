@@ -1,0 +1,170 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Header Section -->
+            <div class="text-center mb-5">
+                <div class="mb-4">
+                    <img src="/media/profile/hasan_saygili.jpg" 
+                         class="rounded-circle shadow" 
+                         alt="Hasan Saygılı" 
+                         style="width: 150px; height: 150px; object-fit: cover;"
+                         onerror="this.src='https://via.placeholder.com/150x150/007bff/ffffff?text=HS'">
+                </div>
+                <h1 class="display-4 fw-bold text-primary">Merhaba! 👋</h1>
+                <p class="lead text-muted">Ben bir yazılım geliştirici ve teknoloji tutkunuyum</p>
+            </div>
+
+            <!-- About Content -->
+            <div class="card shadow-lg border-0 mb-5">
+                <div class="card-body p-5">
+                    <h2 class="card-title text-center mb-4">
+                        <i class="fas fa-user text-primary me-2"></i>Hakkımda
+                    </h2>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <h5 class="text-primary">
+                                <i class="fas fa-graduation-cap me-2"></i>Eğitim
+                            </h5>
+                            <p class="text-muted">
+                                Akdeniz Üniversitesi Bilgisayar Mühendisliği bölümünde 3. sınıf öğrencisiyim. 
+                                Yazılım geliştirme, yapay zeka ve data science alanlarında 
+                                kendimi geliştirmeye odaklanıyorum.
+                            </p>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <h5 class="text-primary">
+                                <i class="fas fa-target me-2"></i>Hedeflerim
+                            </h5>
+                            <p class="text-muted">
+                                Yazılım geliştirme, görsel tasarım, veri bilimi, 
+                                yapay zeka ve yönetim alanlarında uzmanlaşmayı hedefliyorum. 
+                                Sürekli öğrenme ve gelişimi önemsiyorum.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <h5 class="text-primary">
+                                <i class="fas fa-code me-2"></i>Yeteneklerim
+                            </h5>
+                            <p class="text-muted">
+                                Güçlü liderlik ve takım çalışması becerilerine sahibim. 
+                                Çalışkan ve hedef odaklı bir öğrenciyim. Pratik uygulamalar 
+                                ile bilgi ve becerilerimi geliştirmeye çalışıyorum.
+                            </p>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <h5 class="text-primary">
+                                <i class="fas fa-heart me-2"></i>Hobilerim
+                            </h5>
+                            <p class="text-muted">
+                                Spor yapmayı seviyorum, özellikle masa tenisi oynuyorum. 
+                                Hayatımdan sporu eksik etmemeye çalışıyorum. 
+                                Ayrıca teknoloji ve yazılım geliştirme konularında 
+                                sürekli araştırma yapıyorum.
+                                Müzik yapmayı ve gitar çalmayı seviyorum.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Media Section -->
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5 text-center">
+                    <h2 class="card-title mb-4">
+                        <i class="fas fa-share-alt text-primary me-2"></i>Sosyal Medya Hesaplarım
+                    </h2>
+                    <p class="text-muted mb-4">Benimle iletişime geçmek ve çalışmalarımı takip etmek için:</p>
+                    
+                    <div class="row justify-content-center">
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <a href="https://www.linkedin.com/in/hasan-sayg%C4%B1l%C4%B1-78755024a/" 
+                               target="_blank" 
+                               class="btn btn-outline-primary btn-lg w-100 d-flex align-items-center justify-content-center"
+                               style="height: 60px;">
+                                <i class="fab fa-linkedin fa-2x me-2"></i>
+                                <span>LinkedIn</span>
+                            </a>
+                        </div>
+                        
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <a href="https://github.com/HasaNSaygili" 
+                               target="_blank" 
+                               class="btn btn-outline-dark btn-lg w-100 d-flex align-items-center justify-content-center"
+                               style="height: 60px;">
+                                <i class="fab fa-github fa-2x me-2"></i>
+                                <span>GitHub</span>
+                            </a>
+                        </div>
+                        
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <a href="https://medium.com/@hasansaygili425" 
+                               target="_blank" 
+                               class="btn btn-outline-success btn-lg w-100 d-flex align-items-center justify-content-center"
+                               style="height: 60px;">
+                                <i class="fab fa-medium fa-2x me-2"></i>
+                                <span>Medium</span>
+                            </a>
+                        </div>
+                        
+                        <div class="col-md-3 col-sm-6 mb-3">
+                            <a href="https://www.instagram.com/hasansaygili425/" 
+                               target="_blank" 
+                               class="btn btn-outline-danger btn-lg w-100 d-flex align-items-center justify-content-center"
+                               style="height: 60px;">
+                                <i class="fab fa-instagram fa-2x me-2"></i>
+                                <span>Instagram</span>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <p class="text-muted">
+                            <i class="fas fa-envelope me-2"></i>
+                            E-posta: <a href="mailto:hasansaygili425@gmail.com" class="text-primary">hasansaygili425@gmail.com</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    .card {
+        transition: transform 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .btn {
+        transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .text-primary {
+        color: #007bff !important;
+    }
+    
+    .bg-primary {
+        background-color: #007bff !important;
+    }
+</style>
+{% endblock %}

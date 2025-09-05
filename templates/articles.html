@@ -1,0 +1,233 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<!-- Header Section -->
+<div class="container-fluid bg-primary text-white py-4 mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold mb-2">
+                    <i class="fas fa-newspaper me-3"></i>Makaleler
+                </h1>
+                <p class="lead mb-0">Teknoloji dünyasından en güncel içerikler</p>
+            </div>
+            <div class="col-lg-4 text-end">
+                <div class="search-box">
+                    <form class="d-flex" role="search">
+                        {% csrf_token %}
+                        <input class="form-control me-2" type="search" placeholder="Makale ara..." 
+                               name="keyword" maxlength="64" style="border-radius: 25px;">
+                        <button class="btn btn-light" type="submit" style="border-radius: 25px;">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+
+
+            {% if articles %}
+                {% for article in articles %}
+                    <div class="card shadow-sm border-0 mb-4 article-card">
+                        <div class="card-body p-4">
+                            <!-- Article Header -->
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div class="flex-grow-1">
+                                    <h2 class="card-title mb-2">
+                                        <a href="{% url 'article:detail' article.id %}" class="text-decoration-none text-dark">
+                                            {{article.title}}
+                                        </a>
+                                    </h2>
+                                    <div class="article-meta text-muted small mb-3">
+                                        <span class="me-3">
+                                            <i class="fas fa-user me-1"></i>{{article.author.username}}
+                                        </span>
+                                        <span class="me-3">
+                                            <i class="fas fa-calendar me-1"></i>{{article.created_date|date:"d M Y"}}
+                                        </span>
+                                        {% if article.category %}
+                                            <span>
+                                                <i class="fas fa-tag me-1"></i>
+                                                <a href="{% url 'article:category_articles' article.category.slug %}" 
+                                                   class="text-decoration-none text-primary">
+                                                    {{ article.category.name }}
+                                                </a>
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Article Image -->
+                            {% if article.article_image %}
+                                <div class="article-image mb-3">
+                                    <img src="{{article.article_image.url}}" 
+                                         class="img-fluid rounded" 
+                                         alt="{{article.title}}"
+                                         style="width: 100%; height: 200px; object-fit: cover;">
+                                </div>
+                            {% endif %}
+
+                            <!-- Article Content -->
+                            <div class="article-content mb-3">
+                                <p class="text-muted">
+                                    {{article.content|safe|truncatewords:30}}
+                                </p>
+                            </div>
+
+                            <!-- Read More Button -->
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="{% url 'article:detail' article.id %}" 
+                                   class="btn btn-primary btn-sm">
+                                    <i class="fas fa-arrow-right me-1"></i>Devamını Oku
+                                </a>
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>{{article.created_date|timesince}} önce
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center py-5">
+                    <div class="empty-state">
+                        <i class="fas fa-newspaper text-muted" style="font-size: 4rem; opacity: 0.3;"></i>
+                        <h3 class="text-muted mt-3">Henüz makale bulunmuyor</h3>
+                        <p class="text-muted">İlk makaleyi siz yazın ve teknoloji dünyasına katkıda bulunun!</p>
+                        {% if request.user.is_authenticated %}
+                            <a href="{% url 'article:addarticle' %}" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>İlk Makaleyi Yaz
+                            </a>
+                        {% else %}
+                            <a href="{% url 'user:register' %}" class="btn btn-primary">
+                                <i class="fas fa-user-plus me-2"></i>Üye Ol ve Yaz
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="sticky-top" style="top: 100px;">
+                <!-- Categories Card -->
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-tags me-2"></i>Kategoriler
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="categories-grid">
+                            {% for category in categories %}
+                                <a href="{% url 'article:category_articles' category.slug %}" 
+                                   class="category-tag">
+                                    {{ category.name }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions Card -->
+                {% if request.user.is_authenticated %}
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-bolt me-2"></i>Hızlı İşlemler
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'article:addarticle' %}" class="btn btn-success btn-sm">
+                                    <i class="fas fa-plus me-2"></i>Yeni Makale
+                                </a>
+                                <a href="{% url 'article:dashboard' %}" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-tachometer-alt me-2"></i>Kontrol Paneli
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    .article-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-left: 4px solid transparent;
+    }
+    
+    .article-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+        border-left-color: #007bff;
+    }
+    
+    .article-card .card-title a:hover {
+        color: #007bff !important;
+    }
+    
+    .categories-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .category-tag {
+        display: inline-block;
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+    }
+    
+    .category-tag:hover {
+        background: linear-gradient(135deg, #0056b3, #004085);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+    }
+    
+    .btn {
+        transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .empty-state {
+        padding: 3rem 1rem;
+    }
+    
+    .article-meta span {
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    .search-box .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,204 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<!-- Hero/Header -->
+<div class="container-fluid bg-dark text-white py-5 mb-4" style="background: linear-gradient(135deg,#0d6efd,#0b5ed7);">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-9">
+        <h1 class="display-6 fw-bold mb-2">{{ article.title }}</h1>
+        <div class="d-flex flex-wrap align-items-center gap-2">
+          <span class="badge bg-light text-dark"><i class="fas fa-user me-1"></i>{{ article.author.username }}</span>
+          <span class="badge bg-light text-dark"><i class="fas fa-calendar me-1"></i>{{ article.created_date|date:"d M Y" }}</span>
+          {% if article.category %}
+            <a href="{% url 'article:category_articles' article.category.slug %}" class="badge bg-warning text-dark text-decoration-none">
+              <i class="fas fa-tag me-1"></i>{{ article.category.name }}
+            </a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-lg-3 text-lg-end mt-3 mt-lg-0">
+        <a href="{% url 'article:articles' %}" class="btn btn-outline-light btn-sm"><i class="fas fa-arrow-left me-2"></i>Geri</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <!-- Cover Image -->
+      {% if article.article_image %}
+      <figure class="mb-4">
+        <img src="{{ article.article_image.url }}" class="img-fluid rounded shadow-sm w-100" style="max-height: 520px; object-fit: cover;" alt="{{ article.title }}">
+      </figure>
+      {% endif %}
+
+      <!-- Related + Favorite Row -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+          {% if request.user.is_authenticated %}
+            <a href="{% url 'article:toggle_favorite' article.id %}" class="btn btn-outline-danger btn-sm">
+              {% if is_favorited %}
+                <i class="fas fa-heart me-1"></i> Favorilerden Çıkar
+              {% else %}
+                <i class="far fa-heart me-1"></i> Favorilere Ekle
+              {% endif %}
+            </a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Content Card -->
+      <article class="card shadow-sm border-0 mb-5">
+        <div class="card-body p-4">
+          <section class="article-content">
+            {{ article.content|safe }}
+          </section>
+        </div>
+      </article>
+
+      <!-- Related Articles -->
+      {% if related_articles %}
+      <div class="card shadow-sm border-0 mb-5">
+        <div class="card-header bg-white border-0 py-3">
+          <h5 class="mb-0"><i class="fas fa-link me-2 text-primary"></i>İlgili Yazılar</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            {% for a in related_articles %}
+            <div class="col-md-6 col-lg-4 mb-3">
+              <a href="{% url 'article:detail' a.id %}" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm">
+                  {% if a.article_image %}
+                    <img src="{{ a.article_image.url }}" class="card-img-top" style="height:140px;object-fit:cover" alt="{{ a.title }}">
+                  {% endif %}
+                  <div class="card-body">
+                    <h6 class="text-dark mb-1">{{ a.title|truncatechars:60 }}</h6>
+                    {% if a.category %}<span class="badge bg-primary">{{ a.category.name }}</span>{% endif %}
+                  </div>
+                </div>
+              </a>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Comments List -->
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-white border-0 py-3">
+          <h5 class="mb-0"><i class="fas fa-comments me-2 text-primary"></i>Yorumlar</h5>
+        </div>
+        <div class="card-body">
+          {% if comments %}
+            <div class="list-group list-group-flush">
+              {% for comment in comments %}
+              <div class="list-group-item px-0">
+                <div class="d-flex">
+                  <div class="flex-shrink-0">
+                    <img class="rounded-circle" src="https://ui-avatars.com/api/?name={{ comment.comment_author|urlencode }}&background=0D6EFD&color=fff" alt="avatar" width="44" height="44">
+                  </div>
+                  <div class="ms-3">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                      <strong>{{ comment.comment_author }}</strong>
+                      <small class="text-muted"><i class="far fa-clock me-1"></i>{{ comment.comment_date|date:"d M Y H:i" }}</small>
+                      <a href="#" class="small ms-2" onclick="replyTo(event, {{ comment.id }} , '{{ comment.comment_author|escapejs }}')">
+                        <i class="fas fa-reply me-1"></i>Yanıtla
+                      </a>
+                    </div>
+                    <div class="text-muted">{{ comment.comment_content }}</div>
+                    {% if comment.replies.all %}
+                      {% for r in comment.replies.all %}
+                        <div class="d-flex mt-3 ps-3 border-start">
+                          <div class="flex-shrink-0">
+                            <img class="rounded-circle" src="https://ui-avatars.com/api/?name={{ r.comment_author|urlencode }}&background=6C757D&color=fff" width="36" height="36" alt="avatar">
+                          </div>
+                          <div class="ms-2">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                              <strong>{{ r.comment_author }}</strong>
+                              <small class="text-muted">{{ r.comment_date|date:"d M Y H:i" }}</small>
+                            </div>
+                            <div class="text-muted">{{ r.comment_content }}</div>
+                          </div>
+                        </div>
+                      {% endfor %}
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="text-center text-muted py-3">Henüz yorum yok. İlk yorumu siz yazın.</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Comment Form -->
+      <div id="commentFormCard" class="card shadow-sm border-0 mb-5">
+        <div class="card-header bg-white border-0 py-3">
+          <h5 class="mb-0"><i class="fas fa-pen me-2 text-primary"></i>Yorum Yap</h5>
+        </div>
+        <div class="card-body">
+          <form id="commentForm" action="{% url 'article:comment' article.id %}" method="post">
+            {% csrf_token %}
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">İsim</label>
+                <input name="comment_author" type="text" class="form-control" placeholder="İsminizi giriniz" required>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Yorumunuz</label>
+                <textarea name="comment_content" class="form-control" rows="4" placeholder="Fikir ve görüşlerinizi yazın" required></textarea>
+              </div>
+              <input type="hidden" name="parent_id" id="parent_id">
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+              <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane me-2"></i>Gönder</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+  .article-content img { max-width: 100%; height: auto; border-radius: .25rem; }
+  .article-content h1, .article-content h2, .article-content h3 { margin-top: 1.25rem; }
+  .article-content p { line-height: 1.8; }
+  .list-group-item { border: 0; border-top: 1px solid rgba(0,0,0,.05); }
+  .list-group-item:first-child { border-top: 0; }
+  .badge { font-weight: 600; }
+  .btn { transition: all .2s ease; }
+  .btn:hover { transform: translateY(-1px); }
+  figure { overflow: hidden; }
+</style>
+
+<script>
+  function replyTo(ev, commentId, authorName){
+    if(ev && ev.preventDefault) ev.preventDefault();
+    const input = document.getElementById('parent_id');
+    if(input){ input.value = commentId; }
+    const formCard = document.getElementById('commentFormCard');
+    if(formCard){
+      const rect = formCard.getBoundingClientRect();
+      const offset = window.pageYOffset + rect.top - 100; // offset for navbar
+      window.scrollTo({ top: offset, behavior: 'smooth' });
+      formCard.classList.add('reply-pulse');
+      setTimeout(()=> formCard.classList.remove('reply-pulse'), 1200);
+    }
+  }
+</script>
+
+<style>
+  .reply-pulse { box-shadow: 0 0 0 0 rgba(13,110,253,.7); animation: pulse 1.2s ease-out 1; }
+  @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(13,110,253,.7)} 70%{box-shadow:0 0 0 12px rgba(13,110,253,0)} 100%{box-shadow:0 0 0 0 rgba(13,110,253,0)} }
+  .cancel-reply { cursor: pointer; }
+</style>
+{% endblock %}

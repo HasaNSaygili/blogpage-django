@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+
+{% block body %}
+{% load crispy_forms_tags %} 
+
+<!-- Header -->
+<div class="container-fluid bg-primary text-white py-4 mb-4">
+  <div class="container">
+    <div class="d-flex align-items-center justify-content-between">
+      <div>
+        <h1 class="h2 mb-1"><i class="fas fa-pen-to-square me-2"></i>Yeni Makale</h1>
+        <p class="mb-0 text-white-50">Fikirlerinizi paylaşın, görsel ekleyin ve yayımlayın.</p>
+      </div>
+      <a href="{% url 'article:dashboard' %}" class="btn btn-light"><i class="fas fa-arrow-left me-2"></i>Kontrol Paneli</a>
+    </div>
+  </div>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    .preview-box { border: 2px dashed rgba(255,255,255,0.4); border-radius: 12px; padding: 8px; }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      const input = document.querySelector('input[name="article_image"]');
+      const img = document.getElementById('articleImagePreview');
+      if(input && img){
+        input.addEventListener('change', function(e){
+          const file = e.target.files && e.target.files[0];
+          if(!file){ img.src=''; img.classList.add('d-none'); return; }
+          const reader = new FileReader();
+          reader.onload = function(ev){ img.src = ev.target.result; img.classList.remove('d-none'); };
+          reader.readAsDataURL(file);
+        });
+      }
+    });
+  </script>
+</div>
+
+<!-- Form Card -->
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-9">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.media }}
+
+            <!-- Title -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Başlık</label>
+              {{ form.title|as_crispy_field }}
+            </div>
+
+            <!-- Category and Image side by side -->
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Kategori</label>
+                {{ form.category|as_crispy_field }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Makale Görseli</label>
+                {{ form.article_image|as_crispy_field }}
+              </div>
+            </div>
+
+            <!-- Live Image Preview -->
+            <div class="mt-2">
+              <div class="preview-box">
+                <img id="articleImagePreview" class="img-fluid rounded d-none" alt="Önizleme" />
+              </div>
+            </div>
+
+            <!-- Content -->
+            <div class="mt-3">
+              <label class="form-label fw-semibold">İçerik</label>
+              {{ form.content|as_crispy_field }}
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-4">
+              <a href="{% url 'article:dashboard' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-times me-2"></i>Vazgeç
+              </a>
+              <button type="submit" class="btn btn-success">
+                <i class="fas fa-paper-plane me-2"></i>Yayımla
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

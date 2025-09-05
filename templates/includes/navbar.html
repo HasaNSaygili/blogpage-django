@@ -1,0 +1,46 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'index' %}">Hasan Blog</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+            <a class="nav-link active" href="{% url 'about' %}">Hakkımda</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="{% url 'article:articles' %}">Makaleler</a>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav ml-auto">
+
+      
+      {% if request.user.is_authenticated %}
+        <li class="nav-item  ">
+            <a class="nav-link active" href="{% url 'article:dashboard' %}">Kontrol Paneli</a>
+        </li>
+        <li class="nav-item  ">
+            <a class="nav-link active" href="{% url 'user:logout' %}">Çıkış Yap</a>
+        </li>
+      {% else %}
+        <li class="nav-item  ">
+              <a class="nav-link active" href="{% url 'user:login' %}">Giriş Yap</a>
+        </li>
+      {% endif %}
+          <li class="nav-item  ">
+            <a class="nav-link active" href="{% url 'user:register' %}">Kayıt Ol</a>
+          </li>
+      </ul>
+   
+        
+        
+        
+        
+
+    </div>
+
+  </div>
+</nav>

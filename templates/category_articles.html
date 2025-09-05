@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="row">
+    <div class="col-lg-8">
+        <h3>{{ category.name }} Kategorisindeki Makaleler</h3>
+        <hr>
+        
+        {% if articles %}
+            {% for article in articles %}
+                <article>
+                    <header class="mb-4">
+                        <a href="{% url 'article:detail' article.id %}">
+                            <h2 class="fw-bolder mb-1">{{ article.title }}</h2>
+                        </a>
+                        <div class="text-muted fst-italic mb-2">{{ article.created_date }}</div>
+                        <div class="text-muted fst-italic mb-2">{{ article.author.username }} tarafından yayınlandı</div>
+                        <hr>
+                    </header>
+                    
+                    {% if article.article_image %}
+                        <figure class="mb-4">
+                            <img class="img-fluid rounded" src="{{ article.article_image.url }}" alt="..." />
+                        </figure>
+                    {% endif %}
+                    
+                    <section class="mb-5">
+                        {{ article.content|safe|truncatewords:50 }}
+                    </section>
+                    
+                    <a href="{% url 'article:detail' article.id %}" class="btn btn-danger" style="float:right">Devamını oku</a>
+                </article>
+                <hr>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">
+                <h4>Bu kategoride henüz makale bulunmuyor.</h4>
+                <p>Bu kategoriye makale eklemek için <a href="{% url 'article:addarticle' %}">makale oluştur</a> sayfasını ziyaret edin.</p>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Kategoriler</h5>
+            </div>
+            <div class="card-body">
+                <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                    {% for cat in categories %}
+                        <a href="{% url 'article:category_articles' cat.slug %}" 
+                           style="display: inline-block; background-color: #007bff; color: white; padding: 4px 8px; border-radius: 12px; text-decoration: none; font-size: 12px; white-space: nowrap;">
+                            {{ cat.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

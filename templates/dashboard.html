@@ -1,0 +1,324 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<!-- Header Section -->
+<div class="container-fluid bg-primary text-white py-4 mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold mb-2">
+                    <i class="fas fa-tachometer-alt me-3"></i>Kontrol Paneli
+                </h1>
+                <p class="lead mb-0">Hoşgeldiniz, {{request.user.username}}! Makalelerinizi yönetin</p>
+            </div>
+            <div class="col-lg-4 text-end">
+                <a href="{% url 'article:addarticle' %}" class="btn btn-light btn-lg">
+                    <i class="fas fa-plus me-2"></i>Yeni Makale
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Stats Cards -->
+    <div class="row mb-5">
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card bg-primary text-white shadow-sm border-0">
+                <div class="card-body text-center">
+                    <i class="fas fa-newspaper fa-2x mb-3"></i>
+                    <h3 class="mb-1">{{ articles|length }}</h3>
+                    <p class="mb-0">Toplam Makale</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card bg-success text-white shadow-sm border-0">
+                <div class="card-body text-center">
+                    <i class="fas fa-eye fa-2x mb-3"></i>
+                    <h3 class="mb-1">0</h3>
+                    <p class="mb-0">Toplam Görüntüleme</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card bg-info text-white shadow-sm border-0">
+                <div class="card-body text-center">
+                    <i class="fas fa-comments fa-2x mb-3"></i>
+                    <h3 class="mb-1">0</h3>
+                    <p class="mb-0">Toplam Yorum</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card bg-warning text-white shadow-sm border-0">
+                <div class="card-body text-center">
+                    <i class="fas fa-calendar fa-2x mb-3"></i>
+                    <h3 class="mb-1">{{ articles|length }}</h3>
+                    <p class="mb-0">Bu Ay</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Articles + Favorites -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white border-0 py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-list me-2 text-primary"></i>Makalelerim
+                        </h5>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-primary btn-sm active" id="gridView">
+                                <i class="fas fa-th"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-primary btn-sm" id="listView">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    {% if articles %}
+                        <!-- Grid View -->
+                        <div id="gridContainer" class="p-4">
+                            <div class="row">
+                                {% for article in articles %}
+                                    <div class="col-lg-4 col-md-6 mb-4">
+                                        <div class="card h-100 border-0 shadow-sm article-card">
+                                            {% if article.article_image %}
+                                                <img src="{{article.article_image.url}}" 
+                                                     class="card-img-top" 
+                                                     alt="{{article.title}}"
+                                                     style="height: 200px; object-fit: cover;">
+                                            {% else %}
+                                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                                                     style="height: 200px;">
+                                                    <i class="fas fa-image text-muted fa-3x"></i>
+                                                </div>
+                                            {% endif %}
+                                            <div class="card-body d-flex flex-column">
+                                                <h6 class="card-title">
+                                                    <a href="{% url 'article:detail' article.id %}" 
+                                                       class="text-decoration-none text-dark">
+                                                        {{article.title|truncatechars:50}}
+                                                    </a>
+                                                </h6>
+                                                <p class="card-text text-muted small flex-grow-1">
+                                                    {{article.content|safe|truncatewords:15}}
+                                                </p>
+                                                <div class="mt-auto">
+                                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-calendar me-1"></i>
+                                                            {{article.created_date|date:"d M Y"}}
+                                                        </small>
+                                                        {% if article.category %}
+                                                            <span class="badge bg-primary">{{article.category.name}}</span>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="btn-group w-100" role="group">
+                                                        <a href="{% url 'article:detail' article.id %}" 
+                                                           class="btn btn-outline-primary btn-sm">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        <a href="{% url 'article:update' article.id %}" 
+                                                           class="btn btn-outline-success btn-sm">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <a href="{% url 'article:delete' article.id %}" 
+                                                           class="btn btn-outline-danger btn-sm"
+                                                           onclick="return confirm('Bu makaleyi silmek istediğinizden emin misiniz?')">
+                                                            <i class="fas fa-trash"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- List View -->
+                        <div id="listContainer" class="d-none">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Makale</th>
+                                            <th>Kategori</th>
+                                            <th>Tarih</th>
+                                            <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for article in articles %}
+                <tr>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        {% if article.article_image %}
+                                                            <img src="{{article.article_image.url}}" 
+                                                                 class="rounded me-3" 
+                                                                 alt="{{article.title}}"
+                                                                 style="width: 50px; height: 50px; object-fit: cover;">
+                                                        {% else %}
+                                                            <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center" 
+                                                                 style="width: 50px; height: 50px;">
+                                                                <i class="fas fa-image text-muted"></i>
+                                                            </div>
+                                                        {% endif %}
+                                                        <div>
+                                                            <h6 class="mb-1">
+                                                                <a href="{% url 'article:detail' article.id %}" 
+                                                                   class="text-decoration-none text-dark">
+                                                                    {{article.title}}
+                                                                </a>
+                                                            </h6>
+                                                            <small class="text-muted">
+                                                                {{article.content|safe|truncatewords:10}}
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    {% if article.category %}
+                                                        <span class="badge bg-primary">{{article.category.name}}</span>
+                                                    {% else %}
+                                                        <span class="text-muted">Kategori yok</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    <small class="text-muted">
+                                                        {{article.created_date|date:"d M Y"}}<br>
+                                                        {{article.created_date|time:"H:i"}}
+                                                    </small>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group" role="group">
+                                                        <a href="{% url 'article:detail' article.id %}" 
+                                                           class="btn btn-outline-primary btn-sm" title="Görüntüle">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                        <a href="{% url 'article:update' article.id %}" 
+                                                           class="btn btn-outline-success btn-sm" title="Düzenle">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <a href="{% url 'article:delete' article.id %}" 
+                                                           class="btn btn-outline-danger btn-sm" title="Sil"
+                                                           onclick="return confirm('Bu makaleyi silmek istediğinizden emin misiniz?')">
+                                                            <i class="fas fa-trash"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+                            </div>
+                        </div>
+{% else %}
+                        <div class="text-center py-5">
+                            <div class="empty-state">
+                                <i class="fas fa-newspaper text-muted" style="font-size: 4rem; opacity: 0.3;"></i>
+                                <h4 class="text-muted mt-3">Henüz makaleniz bulunmuyor</h4>
+                                <p class="text-muted">İlk makalenizi yazarak blog'unuzu başlatın!</p>
+                                <a href="{% url 'article:addarticle' %}" class="btn btn-primary">
+                                    <i class="fas fa-plus me-2"></i>İlk Makaleyi Yaz
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 mt-4 mt-lg-0">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white border-0 py-3">
+                    <h5 class="mb-0"><i class="fas fa-heart text-danger me-2"></i>Favorilerim</h5>
+                </div>
+                <div class="card-body">
+                    {% if favorites %}
+                        <ul class="list-group list-group-flush">
+                            {% for fav in favorites %}
+                                <li class="list-group-item px-0 d-flex">
+                                    {% if fav.article.article_image %}
+                                        <img src="{{ fav.article.article_image.url }}" class="rounded me-2" style="width:48px;height:48px;object-fit:cover" alt="{{ fav.article.title }}">
+                                    {% else %}
+                                        <div class="bg-light rounded me-2 d-flex align-items-center justify-content-center" style="width:48px;height:48px">
+                                            <i class="fas fa-image text-muted"></i>
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        <a href="{% url 'article:detail' fav.article.id %}" class="text-decoration-none d-block">{{ fav.article.title|truncatechars:60 }}</a>
+                                        <small class="text-muted">{{ fav.article.author.username }}{% if fav.article.category %} • {{ fav.article.category.name }}{% endif %}</small>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="text-muted">Favori makaleniz yok.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    .article-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .article-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+    }
+    
+    .card {
+        transition: all 0.3s ease;
+    }
+    
+    .btn {
+        transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px);
+    }
+    
+    .empty-state {
+        padding: 3rem 1rem;
+    }
+    
+    .table tbody tr:hover {
+        background-color: rgba(0,123,255,0.05);
+    }
+    
+    .badge {
+        font-size: 0.75em;
+    }
+</style>
+
+<script>
+    // View Toggle Functionality
+    document.getElementById('gridView').addEventListener('click', function() {
+        document.getElementById('gridContainer').classList.remove('d-none');
+        document.getElementById('listContainer').classList.add('d-none');
+        this.classList.add('active');
+        document.getElementById('listView').classList.remove('active');
+    });
+    
+    document.getElementById('listView').addEventListener('click', function() {
+        document.getElementById('listContainer').classList.remove('d-none');
+        document.getElementById('gridContainer').classList.add('d-none');
+        this.classList.add('active');
+        document.getElementById('gridView').classList.remove('active');
+    });
+</script>
+{% endblock %}
